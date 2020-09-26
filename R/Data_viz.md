@@ -544,3 +544,485 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
     ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 
 ![](Data_viz_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
+
+### Exercises
+
+Run this code in your head and predict what the output will look like.
+Then, run the code in R and check your predictions.
+
+``` r
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE)
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+
+``` r
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE)
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+
+``` r
+ggplot(data = mpg, aes(x = displ, y = hwy, group = drv)) +
+  geom_smooth(se = FALSE) +
+  geom_point()
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-27-2.png)<!-- -->
+
+``` r
+ggplot(data = mpg, aes(x = displ, y = hwy, group = drv, colour = drv)) +
+  geom_smooth(se = FALSE) +
+  geom_point()
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-27-3.png)<!-- -->
+
+``` r
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(aes(colour = drv)) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy), se = FALSE)
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-27-4.png)<!-- -->
+
+``` r
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_smooth(aes(linetype = drv), se = FALSE) +
+  geom_point(aes(colour = drv))
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-27-5.png)<!-- -->
+
+``` r
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, colour = drv)) + 
+  geom_point(stroke = 5, show.legend = FALSE)
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-27-6.png)<!-- -->
+
+``` r
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point(size = 4, color = "white") +
+  geom_point(aes(colour = drv))
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-27-7.png)<!-- -->
+
+## Statistical Functions
+
+Types of charts from stat algorithm-
+
+  - bar charts, histograms, and frequency polygons bin your data and
+    then plot bin counts, the number of points that fall in each bin.
+
+  - smoothers fit a model to your data and then plot predictions from
+    the model.
+
+  - boxplots compute a robust summary of the distribution and then
+    display a specially formatted box.
+
+<!-- end list -->
+
+``` r
+ggplot(data = diamonds) + 
+  stat_count(mapping = aes(x = cut))
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+
+``` r
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut))
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-28-2.png)<!-- -->
+
+``` r
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, y = stat(prop), group = 1))
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+
+``` r
+ggplot(data = diamonds) + 
+  stat_summary(
+    mapping = aes(x = cut, y = depth),
+    fun.min = min,
+    fun.max = max,
+    fun = median
+  )
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
+
+### Exercises
+
+The default geom for `stat_summary()` is `geom_pointrange()`. The
+default stat for `geom_pointrange()` is `identity()` but we can add the
+argument `stat = "summary"` to use `stat_summary()` instead of
+`stat_identity()`.
+
+``` r
+ggplot(data = diamonds) + 
+  geom_pointrange(
+    mapping = aes(x = cut, y = depth),
+    stat = "summary"
+  )
+```
+
+    ## No summary function supplied, defaulting to `mean_se()`
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
+
+The resulting message says that `stat_summary()` uses the mean and sd to
+calculate the middle point and endpoints of the line. However, in the
+original plot the min and max values were used for the endpoints. To
+recreate the original plot we need to specify values for `fun.min`,
+`fun.max`, and `fun.`
+
+``` r
+ggplot(data = diamonds) +
+  geom_pointrange(
+    mapping = aes(x = cut, y = depth),
+    stat = "summary",
+    fun.min = min,
+    fun.max = max,
+    fun = median
+  )
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-32-1.png)<!-- -->
+
+What does `geom_col()` do? How is it different to `geom_bar()`?
+
+The `geom_col()` function has different default stat than `geom_bar()`.
+The default stat of `geom_col()` is `stat_identity()`, which leaves the
+data as is. The `geom_col()` function expects that the data contains x
+values and y values which represent the bar height.
+
+The default stat of `geom_bar()` is `stat_count()`. The `geom_bar()`
+function only expects an x variable. The stat, `stat_count()`,
+preprocesses input data by counting the number of observations for each
+value of x. The y aesthetic uses the values of these counts.
+
+Most geoms and stats come in pairs that are almost always used in
+concert. Read through the documentation and make a list of all the
+pairs. What do they have in common?
+
+![Fig 3: geom-stat
+pairs](D:/Dropbox/ILKConsultancy/r4ds_practice/R/images/Fig3.JPG)
+
+These pairs of geoms and stats tend to have their names in common, such
+`stat_smooth()` and `geom_smooth()` and be documented on the same help
+page. The pairs of geoms and stats that are used in concert often have
+each other as the default stat (for a geom) or geom (for a stat).
+
+What variables does `stat_smooth()` compute? What parameters control its
+behavior?
+
+The function stat\_smooth() calculates the following variables:
+
+`y`: predicted value `ymin`: lower value of the confidence interval
+`ymax`: upper value of the confidence interval `se`: standard error
+
+The “Computed Variables” section of the `stat_smooth()` documentation
+contains these variables.
+
+The parameters that control the behavior of stat\_smooth() include:
+
+``` r
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, y = ..prop..))
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
+
+``` r
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = color, y = ..prop..))
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-33-2.png)<!-- -->
+
+The problem with these two plots is that the proportions are calculated
+within the groups.
+
+The following code will produce the intended stacked bar charts for the
+case with no `fill` aesthetic.
+
+``` r
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut, y = ..prop.., group = 1))
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+
+With the `fill` aesthetic, the heights of the bars need to be
+normalized.
+
+``` r
+ggplot(data = diamonds) + 
+  geom_bar(aes(x = cut, y = ..count.. / sum(..count..), fill = color))
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
+
+``` r
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, colour = cut))
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
+
+``` r
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = cut))
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-36-2.png)<!-- -->
+
+Note what happens if you map the fill aesthetic to another variable,
+like `clarity`: the bars are automatically stacked. Each colored
+rectangle represents a combination of `cut` and `clarity.`
+
+``` r
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = clarity))
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
+
+`position = "identity"` will place each object exactly where it falls in
+the context of the graph. This is not very useful for bars, because it
+overlaps them. To see that overlapping we either need to make the bars
+slightly transparent by setting `alpha` to a small value, or completely
+transparent by setting `fill = NA`.
+
+``` r
+ggplot(data = diamonds, mapping = aes(x = cut, fill = clarity)) + 
+  geom_bar(alpha = 1/5, position = "identity")
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-38-1.png)<!-- -->
+
+``` r
+ggplot(data = diamonds, mapping = aes(x = cut, colour = clarity)) + 
+  geom_bar(fill = NA, position = "identity")
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-38-2.png)<!-- -->
+
+`position = "fill"` works like stacking, but makes each set of stacked
+bars the same height. This makes it easier to compare proportions across
+groups.
+
+``` r
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = clarity), position = "fill")
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
+
+`position = "dodge"` places overlapping objects directly beside one
+another. This makes it easier to compare individual values.
+
+``` r
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = clarity), position = "dodge")
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
+
+`position = "jitter"` adds a small amount of random noise to each point.
+This spreads the points out because no two points are likely to receive
+the same amount of random noise.
+
+``` r
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy), position = "jitter")
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-41-1.png)<!-- -->
+
+### Exercises
+
+``` r
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_point(position = "jitter")
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-42-1.png)<!-- --> From the
+geom\_jitter() documentation, there are two arguments to jitter:
+
+`width` controls the amount of horizontal displacement, and `height`
+controls the amount of vertical displacement.
+
+``` r
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+  geom_jitter(width = 20)
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-43-1.png)<!-- -->
+
+``` r
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+  geom_jitter(width = 0)
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-44-1.png)<!-- -->
+
+The geom `geom_count()` sizes the points relative to the number of
+observations. Combinations of (`x`, `y`) values with more observations
+will be larger than those with fewer observations.
+
+The geom `geom_jitter()` adds random variation to the locations points
+of the graph. In other words, it “jitters” the locations of points
+slightly.
+
+The default position for `geom_boxplot()` is `"dodge2"`, which is a
+shortcut for `position_dodge2`.
+
+``` r
+ggplot(data = mpg, aes(x = drv, y = hwy, colour = class)) +
+  geom_boxplot()
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-45-1.png)<!-- -->
+
+`position_identity()` is used the boxplots overlap.
+
+``` r
+ggplot(data = mpg, aes(x = drv, y = hwy, colour = class)) +
+  geom_boxplot(position = "identity")
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-46-1.png)<!-- -->
+
+## Coordinate systems
+
+``` r
+ggplot(data = mpg, mapping = aes(x = class, y = hwy)) + 
+  geom_boxplot()
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-47-1.png)<!-- -->
+
+``` r
+ggplot(data = mpg, mapping = aes(x = class, y = hwy)) + 
+  geom_boxplot() +
+  coord_flip()  
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-47-2.png)<!-- -->
+
+``` r
+bar <- ggplot(data = diamonds) + 
+  geom_bar(
+    mapping = aes(x = cut, fill = cut), 
+    show.legend = FALSE,
+    width = 1
+  ) + 
+  theme(aspect.ratio = 1) +
+  labs(x = NULL, y = NULL)
+
+bar + coord_flip()
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-48-1.png)<!-- -->
+
+``` r
+bar + coord_polar()
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-48-2.png)<!-- -->
+
+A pie chart is a stacked bar chart with the addition of polar
+coordinates. Take this stacked bar chart with a single category.
+
+``` r
+ggplot(mpg, aes(x = factor(1), fill = drv)) +
+  geom_bar()
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-49-1.png)<!-- -->
+
+``` r
+ggplot(mpg, aes(x = factor(1), fill = drv)) +
+  geom_bar(width = 1) +
+  coord_polar(theta = "y")
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-50-1.png)<!-- -->
+
+``` r
+ggplot(mpg, aes(x = factor(1), fill = drv)) +
+  geom_bar(width = 1) +
+  coord_polar()
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-51-1.png)<!-- -->
+
+`labs` in ggplot
+
+``` r
+ggplot(data = mpg, mapping = aes(x = class, y = hwy)) +
+  geom_boxplot() +
+  coord_flip() +
+  labs(y = "Highway MPG",
+       x = "Class",
+       title = "Highway MPG by car class",
+       subtitle = "1999-2008",
+       caption = "Source: http://fueleconomy.gov")
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-52-1.png)<!-- -->
+
+What’s the difference between `coord_quickmap()` and `coord_map()`?
+
+The `coord_map()` function uses map projections to project the
+three-dimensional Earth onto a two-dimensional plane. By default,
+`coord_map()` uses the Mercator projection. This projection is applied
+to all the geoms in the plot. The `coord_quickmap()` function uses an
+approximate but faster map projection. This approximation ignores the
+curvature of Earth and adjusts the map for the latitude/longitude ratio.
+The `coord_quickmap()` project is faster than `coord_map(`) both because
+the projection is computationally easier, and unlike `coord_map()`, the
+coordinates of the individual geoms do not need to be transformed.
+
+The function `coord_fixed()` ensures that the line produced by
+`geom_abline()` is at a 45-degree angle. A 45-degree line makes it easy
+to compare the highway and city mileage to the case in which city and
+highway MPG were equal.
+
+``` r
+p <- ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+  geom_point() +
+  geom_abline()
+p + coord_fixed()
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-53-1.png)<!-- -->
+
+``` r
+p
+```
+
+![](Data_viz_files/figure-gfm/unnamed-chunk-53-2.png)<!-- -->
