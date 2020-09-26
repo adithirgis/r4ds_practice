@@ -5,7 +5,7 @@ ARU
 
 ## Introduction
 
-![Fig 1: What to expect?](/images/Fig1.JPG)
+![](images/Fig1.JPG)
 
 ## Data Visualisation
 
@@ -175,7 +175,7 @@ What happened to the SUVs? ggplot2 will only use six shapes at a time.
 By default, additional groups will go unplotted when you use the shape
 aesthetic.
 
-![Fig 2: Shapes in R](/images/Fig2.JPG)
+![](images/Fig2.JPG)
 
 ### Exercises
 
@@ -725,7 +725,7 @@ Most geoms and stats come in pairs that are almost always used in
 concert. Read through the documentation and make a list of all the
 pairs. What do they have in common?
 
-![Fig 3: geom-stat pairs](/images/Fig3.JPG)
+![](images/Fig3.JPG)
 
 These pairs of geoms and stats tend to have their names in common, such
 `stat_smooth()` and `geom_smooth()` and be documented on the same help
