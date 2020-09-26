@@ -1,8 +1,15 @@
 # r4ds_practice
 
-## Resources used 
+## Hi there! 👋
 
-Book: https://r4ds.had.co.nz/
+### Resources used
 
-Solution: https://jrnold.github.io/r4ds-exercise-solutions/index.html
+🔭 Book: https://r4ds.had.co.nz/
+
+💬 Solution: https://jrnold.github.io/r4ds-exercise-solutions/index.html
+
+ 
+
+
+
 
