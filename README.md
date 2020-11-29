@@ -1,4 +1,4 @@
-# r4ds_practice
+# R4DS Bookclub
 
 ## Hi there! 👋
 
