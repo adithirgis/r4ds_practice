@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>R For Data Science Book Club - Chapter 1 &amp; 2</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Adithi R. Upadhya" />
+    <link href="R4DS_Asian_Chap_1_2_ARU_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="R4DS_Asian_Chap_1_2_ARU_files/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <link href="R4DS_Asian_Chap_1_2_ARU_files/remark-css-0.0.1/hygge-duke.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# R For Data Science Book Club - Chapter 1 &amp; 2
+### Adithi R. Upadhya
+### 08-Dec-2020
+
+---
+
+
+
+
+
+
+class:center, middle
+
+## Welcome!
+
+&lt;img src="https://d33wubrfki0l68.cloudfront.net/b88ef926a004b0fce72b2526b0b5c4413666a4cb/24a30/cover.png" width="200px" /&gt;
+
+Thanks for joining!
+
+We'll be covering a different chapter of [R for Data Science](https://r4ds.had.co.nz/index.html) by Hadley Wickham &amp; Garrett Grolemund every Tuesday at 08:00 a.m. IST/ 02:30 a.m. UTC every week.
+---
+## What we'll learn
+
+As Hadley and Garret say- 
+
+&gt; "You'll learn how to get your data into R, get it into the most 
+&gt; useful structure, transform it, visualize it and model it.
+
+
+&gt; "These are the skills that allow data science to happen, and here you will
+&gt; find the best practices for doing each of these things with R."
+
+&amp;nbsp;
+&amp;nbsp;
+
+[*Wickham &amp; Grolemund*]
+---
+class:center, middle
+
+## The Model
+
+![](https://d33wubrfki0l68.cloudfront.net/571b056757d68e6df81a3e3853f54d3c76ad6efc/32d37/diagrams/data-science.png)
+
+
+[*Wickham &amp; Grolemund*]
+
+&amp;nbsp;
+&amp;nbsp;
+
+---
+## The Model
+
+**Import** -- Import the data into R
+
+**Tidy** -- Store the data in a consistent form
+
+**Transform** -- Selecting in on observations of interest
+
+**Visualize** -- Plot or visualise the data
+
+**Model** -- Complimentary to visualisation, tool that answers questions of the data
+
+**Communicate** -- Communicate findings to others
+
+&amp;nbsp;
+&amp;nbsp;
+
+[*Wickham &amp; Grolemund*]
+
+
+---
+## The 80-20 Rule
+
+&gt; "You can tackle about 80% of every project using the tools that
+&gt; you'll learn in this book, but you'll need other tools to tackle the
+&gt; remaining 20%."
+
+&amp;nbsp;
+
+[*Wickham &amp; Grolemund*]
+
+&amp;nbsp;
+
+While most of the analysis techniques used for a data science project are mentioned here, but we might still need to work out some analysis using different tools. 
+---
+## IMPORTANT!!
+
+&gt; "While it's tempting to skip the exercises, there's no better
+&gt; way to learn than practicing on real problems."
+
+&amp;nbsp;
+&amp;nbsp;
+
+We can definitely refer to the [solution book](https://jrnold.github.io/r4ds-exercise-solutions/). (Thanks!)
+
+But personally, I feel that trying to solve it on our own first will definitely help!
+
+---
+## Prerequisites
+
+1. New to programming try [Hands on Programming with R](https://www.amazon.com/dp/1449359019/ref=cm_sw_su_dp) by Garrett.
+
+2. Download and install [R](https://cloud.r-project.org/)
+
+3. Download and install [RStudio](https://rstudio.com/products/rstudio/download/), an intergrated development environment.
+---
+## Prerequisites
+
+To install the "tidyverse" (a collection of many amazing packages) package type:
+
+`install.packages("tidyverse")`
+
+Install these other packages the book uses as examples type:
+
+`install.packages(c("nycflights13", "gapminder", "Lahman"))`
+---
+
+## You're not alone if you run into errors! 
+
+Unable to resolve an error? 
+
+Google the error message. Probably people have encountered it before.
+
+[Stack Overflow](https://stackoverflow.com/). Thanks to amazing people who solve the questions or if you have your own question then prepare a minimal reproducible example or reprex to ask people for help. 
+
+[R4DS Slack](http://r4ds.io/join)!! 
+
+---
+
+class:center, middle
+
+## See you next week!
+
+Next chapter - **Data Visualization**
+
+![](R4DS_Asian_Chap_1_2_ARU_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+
+---
+## Excited to see you all!
+
+The recordings will be up on the youtube channel of [R4DS online learning community](https://www.youtube.com/channel/UCCaChdLMTYMxyawR_Qf-kYA). 
+
+Would you like to present for a week? Let me know!
+
+[Github repo link](https://github.com/r4ds/bookclub-R_for_Data_Science) to upload your slides!
+
+---
+
+class:center, middle
+
+## Acknowledgements
+
+[R4DS online learning community](https://twitter.com/R4DScommunity)
+
+[R Ladies Bangalore](https://twitter.com/RLadiesBLR)
+ 
+and
+
+Everyone!!
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create();
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

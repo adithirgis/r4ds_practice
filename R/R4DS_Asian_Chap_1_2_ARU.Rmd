@@ -1,0 +1,172 @@
+---
+title: "R For Data Science Book Club - Chapter 1 & 2"
+author: "Adithi R. Upadhya"
+date: "08-Dec-2020"
+output:
+  xaringan::moon_reader:
+    ratio: 16:9
+    css: [default, hygge, hygge-duke]
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+```
+
+class:center, middle
+
+## Welcome!
+
+```{r, out.width = "200px"}
+knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/b88ef926a004b0fce72b2526b0b5c4413666a4cb/24a30/cover.png")
+```
+
+Thanks for joining!
+
+We'll be covering a different chapter of [R for Data Science](https://r4ds.had.co.nz/index.html) by Hadley Wickham & Garrett Grolemund every Tuesday at 08:00 a.m. IST/ 02:30 a.m. UTC every week.
+---
+## What we'll learn
+
+As Hadley and Garret say- 
+
+> "You'll learn how to get your data into R, get it into the most 
+> useful structure, transform it, visualize it and model it.
+
+
+> "These are the skills that allow data science to happen, and here you will
+> find the best practices for doing each of these things with R."
+
+&nbsp;
+&nbsp;
+
+[*Wickham & Grolemund*]
+---
+class:center, middle
+
+## The Model
+
+![](https://d33wubrfki0l68.cloudfront.net/571b056757d68e6df81a3e3853f54d3c76ad6efc/32d37/diagrams/data-science.png)
+
+
+[*Wickham & Grolemund*]
+
+&nbsp;
+&nbsp;
+
+---
+## The Model
+
+**Import** -- Import the data into R
+
+**Tidy** -- Store the data in a consistent form
+
+**Transform** -- Selecting in on observations of interest
+
+**Visualize** -- Plot or visualise the data
+
+**Model** -- Complimentary to visualisation, tool that answers questions of the data
+
+**Communicate** -- Communicate findings to others
+
+&nbsp;
+&nbsp;
+
+[*Wickham & Grolemund*]
+
+
+---
+## The 80-20 Rule
+
+> "You can tackle about 80% of every project using the tools that
+> you'll learn in this book, but you'll need other tools to tackle the
+> remaining 20%."
+
+&nbsp;
+
+[*Wickham & Grolemund*]
+
+&nbsp;
+
+While most of the analysis techniques used for a data science project are mentioned here, but we might still need to work out some analysis using different tools. 
+---
+## IMPORTANT!!
+
+> "While it's tempting to skip the exercises, there's no better
+> way to learn than practicing on real problems."
+
+&nbsp;
+&nbsp;
+
+We can definitely refer to the [solution book](https://jrnold.github.io/r4ds-exercise-solutions/). (Thanks!)
+
+But personally, I feel that trying to solve it on our own first will definitely help!
+
+---
+## Prerequisites
+
+1. New to programming try [Hands on Programming with R](https://www.amazon.com/dp/1449359019/ref=cm_sw_su_dp) by Garrett.
+
+2. Download and install [R](https://cloud.r-project.org/)
+
+3. Download and install [RStudio](https://rstudio.com/products/rstudio/download/), an intergrated development environment.
+---
+## Prerequisites
+
+To install the "tidyverse" (a collection of many amazing packages) package type:
+
+`install.packages("tidyverse")`
+
+Install these other packages the book uses as examples type:
+
+`install.packages(c("nycflights13", "gapminder", "Lahman"))`
+---
+
+## You're not alone if you run into errors! 
+
+Unable to resolve an error? 
+
+Google the error message. Probably people have encountered it before.
+
+[Stack Overflow](https://stackoverflow.com/). Thanks to amazing people who solve the questions or if you have your own question then prepare a minimal reproducible example or reprex to ask people for help. 
+
+[R4DS Slack](http://r4ds.io/join)!! 
+
+---
+
+class:center, middle
+
+## See you next week!
+
+Next chapter - **Data Visualization**
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+ggplot(mpg, aes(x = displ, y = hwy)) +
+    geom_point(aes(colour = drv))
+```
+
+---
+## Excited to see you all!
+
+The recordings will be up on the youtube channel of [R4DS online learning community](https://www.youtube.com/channel/UCCaChdLMTYMxyawR_Qf-kYA). 
+
+Would you like to present for a week? Let me know!
+
+[Github repo link](https://github.com/r4ds/bookclub-R_for_Data_Science) to upload your slides!
+
+---
+
+class:center, middle
+
+## Acknowledgements
+
+[R4DS online learning community](https://twitter.com/R4DScommunity)
+
+[R Ladies Bangalore](https://twitter.com/RLadiesBLR)
+ 
+and
+
+Everyone!!
+
