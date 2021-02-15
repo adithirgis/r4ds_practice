@@ -1,0 +1,373 @@
+---
+title: "R4DS Book Club"
+subtitle: "Chapter 12 - Tidy Data"
+author: "Adithi R. Upadhya, ILK Labs"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader
+---
+
+## Organise your Data in R 
+
+```{r}
+library(tidyverse)
+```
+
+
+---
+## Tidy the data!
+
+How to make a dataset tidy:
+
+ 1. Each variable must have its own column.
+ 2. Each observation must have its own row.
+ 3. Each value must have its own cell.
+ 
+ 
+```{r echo = FALSE}
+knitr::include_graphics("https://raw.githubusercontent.com/hadley/r4ds/master/images/tidy-1.png")
+```
+
+---
+
+## Practical Instructions
+
+- Put each dataset in a tibble.
+- Put each variable in a column.
+
+### Advantages
+
+- Ease of management 
+- Maximum utilisation of R's super powers!
+
+
+---
+## Untidy data example 1
+
+### More than one variable per column
+
+```{r}
+table3
+```
+
+---
+
+### 12.2.1 - Q1
+
+Using prose, describe how the variables and observations are organised in each of the sample tables.
+    
+* **table 1**: Example of tidy dataset - has each variable in a column, each observation in a row and each cell/ unit has only one value. The data shows the number of cases and population in differents countries by year.
+
+```{r}
+table1
+```
+
+---
+    
+* **table 2**: Example of untidy dataset - has a pair of rows showing similar values. For each country and year the case and population is stacked one below other. 
+
+```{r}
+table2
+```
+
+---
+    
+* **table 3**: Example of untidy dataset - has each row which contains country and year but the thrid column rate is represented as a combination of two columns - cases/population. Though this number is useful but the representation is confusing. 
+
+```{r}
+table3
+```
+
+---
+
+* **table 4a** and **table 4b**: Example of untidy and long data set, has each row representing either country and population for two years or countryand cases, with the different years as column names. 
+```{r}
+table4a
+```
+
+```{r}
+table4b
+```
+
+---
+
+### 12.2.1 - Q2
+
+Compute the `rate` for `table2`, and `table4a` + `table4b`. 
+    You will need to perform four operations:
+
+  1.  Extract the number of TB cases per country per year.
+  2.  Extract the matching population per country per year.
+  3.  Divide cases by population, and multiply by 10000.
+  4.  Store back in the appropriate place.
+      
+Which representation is easiest to work with? Which is hardest? Why?
+
+---
+
+#### `table2` 
+
+```{r}
+cases <- table2 %>% 
+  filter(type == "cases") %>%
+  select(everything(), - type)
+pop <- table2 %>% 
+  filter(type == "population") %>%
+  select(everything(), - type)
+rate_table <- cases %>% 
+  inner_join(pop, by = c("country", "year"),
+                         suffix = c("_cases", "_pop")) %>%
+  mutate(rate = (count_cases / count_pop) * 10000, 
+         type = "rate") %>%
+  select(country, year, type, count = rate) 
+rate_table %>% 
+  bind_rows(table2) %>%
+  arrange(country, year, type)
+```
+
+---
+
+#### `table4a` and `table4b`
+    
+```{r}
+table4c <- data.frame( country = table4b$country,
+    year_99 = table4a["1999"] / table4b["1999"] * 10000,
+    year_00 = table4a["2000"] / table4b["2000"] * 10000)
+
+names(table4c) <- c("country", "1999", "2000")
+
+table4c
+```
+
+
+---
+
+### 12.2.1 - Q3
+
+Recreate the plot showing change in cases over time using `table2` instead of `table1`. What do you need to do first?
+
+```{r, fig.height = 4}
+library(ggplot2)
+table2_plot <- table2 %>% 
+  filter(type == "cases") 
+  
+plot <- ggplot(table2_plot, aes(year, count)) +
+  geom_line(aes(group = country), colour = "grey50") + 
+  geom_point(aes(colour = country))
+plot
+```
+
+---
+
+## Pivoting
+
+### Most data is untidy - 
+
+- Most people aren’t familiar with the principles of tidy data, and it’s hard to derive them yourself unless you spend a lot of time working with data.
+
+- Data is often organised to facilitate some use other than analysis. For example, data is often organised to make entry as easy as possible.
+
+---
+
+### Two common problems - 
+
+* one variable might be spread across multiple columns, 
+* one observation might be scattered across multiple rows.
+
+
+---
+
+In cases where column names are not names of variables but values of a variable, use `pivot_longer()`.
+
+```{r echo = FALSE}
+knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/3aea19108d39606bbe49981acda07696c0c7fcd8/2de65/images/tidy-9.png")
+```
+
+Pivoted columns (`1999` and `2000`) are dropped, their names are placed in the new `year` column, and values in the new `count` column.
+
+---
+
+In cases where an observation is scattered across multiple rows, use `pivot_wider()`.
+
+```{r echo = FALSE}
+knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/8350f0dda414629b9d6c354f87acf5c5f722be43/bcb84/images/tidy-8.png")
+```
+
+---
+
+### 12.3.3- Q1
+
+Why are pivot_longer() and pivot_wider() not perfectly symmetrical?
+Carefully consider the following example:
+
+pivot_longer() has a names_ptypes argument, e.g.  names_ptypes = list(year = double()). What does it do?
+
+```{r}
+stocks <- tibble(
+  year   = c(2015, 2015, 2016, 2016),
+  half  = c(   1,    2,     1,    2),
+  return = c(1.88, 0.59, 0.92, 0.17)
+)
+stocks %>% 
+  pivot_wider(names_from = year, values_from = return) %>% 
+  pivot_longer(`2015`:`2016`, names_to = "year", values_to = "return")
+```
+
+The `pivot_longer()` call turns column names into character by default. Can override this using the `names_ptype` argument.
+
+
+```{r}
+stocks %>%
+  pivot_wider(names_from = year, values_from = return)%>%
+  pivot_longer(`2015`:`2016`, names_to = "year", values_to = "return",
+               names_transform = list(year = as.numeric))
+```
+
+---
+
+### 12.3.3- Q2
+
+Why does this code fail?
+ 
+```{r}
+# table4a %>% 
+#   pivot_longer(c(1999, 2000), names_to = "year", values_to = "cases")
+#> Error: Can't subset columns that don't exist.
+#> ✖ Locations 1999 and 2000 don't exist.
+#> ℹ There are only 3 columns.
+```
+
+`1999` and `2000` are not the correct way to represent the column name, they need to be surrounded by backticks / "" or else R will try to select that number column.
+
+```{r}
+table4a %>% 
+  pivot_longer(c(`1999`, `2000`), names_to = "year",
+               values_to = "cases")
+```
+
+---
+
+### 12.3.3- Q3
+
+What would happen if you widen this table? Why? How could you add a new column to uniquely identify each value?
+
+
+```{r}
+people <- tribble(
+  ~name,             ~names,  ~values,
+  #-----------------|--------|------
+  "Phillip Woods",   "age",       45,
+  "Phillip Woods",   "height",   186,
+  "Phillip Woods",   "age",       50,
+  "Jessica Cordero", "age",       37,
+  "Jessica Cordero", "height",   156)
+
+people %>% 
+  group_by(name, names) %>%
+  mutate(id = row_number()) %>%
+  ungroup() %>%
+  pivot_wider(names_from = "name", values_from = "values")
+```
+
+---
+
+### 12.3.3- Q4
+
+Tidy the simple tibble below. Do you need to make it wider or longer? What are the variables?
+
+```{r}
+preg <- tribble(
+  ~pregnant, ~male, ~female,
+  "yes",     NA,    10,
+  "no",      20,    12
+)
+
+preg_tidy <- preg %>% 
+  pivot_longer(c(male, female), names_to = "gender", values_to = "count")
+
+preg_tidy
+```
+
+---
+
+## Separate
+
+`separate()` pulls apart one column into multiple columns, by splitting wherever a separator character appears. By default, it separates at any non-alphanumeric character, a specific character can also be passed in the `sep` argument or a vector of integers can also be passed to separate a column at specific positions.
+
+By default, the column type is preserved, but this can be controlled using `convert = TRUE`. 
+
+```{r echo = FALSE}
+knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/f6fca537e77896868fedcd85d9d01031930d76c9/637d9/images/tidy-17.png")
+```
+
+---
+
+## Unite
+
+`unite()` is the inverse of `separate()`: it combines multiple columns into a single column, using an optional separator between the values from different columns (default is `_`).
+
+```{r echo = FALSE}
+knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/3d98d3ba019fed3f9ee328284568d4508e479ef8/0b3e6/images/tidy-18.png")
+```
+
+---
+
+### 12.4.3- Q1
+
+What do the `extra` and `fill` arguments do in `separate()`? Experiment with the various options for the following two toy datasets.
+
+```{r}
+# tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>%
+#   separate(x, c("one", "two", "three"))
+## Expected 3 pieces. Additional pieces 
+## discarded in 1 rows [2].
+
+# tibble(x = c("a,b,c", "d,e", "f,g,i")) %>%
+#  separate(x, c("one", "two", "three"))
+## Expected 3 pieces. Missing pieces filled 
+## with `NA` in 1 rows [2].
+```
+
+---
+
+### Examples
+
+The `extra` and `fill` arguments help in dealing with extra / more or fewer columns than expected based on the new column names. `extra <- c('warn', 'drop', 'merge')`; `fill <- c('warn', 'left', 'right')`.
+
+```{r}
+tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>%
+  separate(x, c("one", "two", "three"), extra = "merge")
+```
+
+```{r}
+tibble(x = c("a,b,c", "d,e", "f,g,i")) %>%
+  separate(x, c("one", "two", "three"), fill = "left")
+```
+
+---
+
+### 12.4.3- Q2
+
+Both `unite()` and `separate()` have a `remove` argument. What does it do? Why would you set it to FALSE?
+
+```{r}
+tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>%
+  separate(x, c("one", "two", "three"), extra = "merge", remove = TRUE)
+```
+
+The `remove` argument removes the original column(s) used for uniting or separating. 
+
+---
+class: inverse
+
+### 12.4.3- Q3
+
+Compare and contrast `separate()` and `extract()`. Why are there three variations of separation (by position, by separator, and with groups), but only one unite?
+
+- The function `separate()`, splits a column into multiple columns by separator, if the `sep` argument is a character vector, or by character positions, if `sep` is numeric.
+
+- The function `extract()` uses a regular expression to specify groups in character vector and split that single character vector into multiple columns. This is more flexible than `separate()` because it does not require a common separator or specific column positions.
+
+- In other words, with `extract()` and `separate()` only one column can be chosen, but there are many choices how to split that single column into different columns. With `unite()`, there are many choices as to which columns to include, but only one choice as to how to combine their contents into a single vector.
+
+
