@@ -56,7 +56,7 @@ table3
 
 Using prose, describe how the variables and observations are organised in each of the sample tables.
     
-* **table 1**: Example of tidy dataset - has each variable in a column, each observation in a row and each cell/ unit has only one value. The data shows the number of cases and population in differents countries by year.
+* **table 1**: Example of tidy dataset - has each variable in a column, each observation in a row and each cell/ unit has only one value. The data shows the number of cases and population in different countries by year.
 
 ```{r}
 table1
@@ -72,7 +72,7 @@ table2
 
 ---
     
-* **table 3**: Example of untidy dataset - has each row which contains country and year but the thrid column rate is represented as a combination of two columns - cases/population. Though this number is useful but the representation is confusing. 
+* **table 3**: Example of untidy dataset - has each row which contains country and year but the third column rate is represented as a combination of two columns - cases/population. Though this number is useful but the representation is confusing. 
 
 ```{r}
 table3
@@ -183,7 +183,7 @@ In cases where column names are not names of variables but values of a variable,
 knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/3aea19108d39606bbe49981acda07696c0c7fcd8/2de65/images/tidy-9.png")
 ```
 
-Pivoted columns (`1999` and `2000`) are dropped, their names are placed in the new `year` column, and values in the new `count` column.
+Pivoted columns (`1999` and `2000`) are dropped, their names are placed in the new `year` column, and values in the new `cases` column.
 
 ---
 
@@ -213,7 +213,9 @@ stocks %>%
   pivot_longer(`2015`:`2016`, names_to = "year", values_to = "return")
 ```
 
-The `pivot_longer()` call turns column names into character by default. Can override this using the `names_ptype` argument.
+---
+
+The `pivot_longer()` call turns column names into character by default. `names_ptype` argument does not override this.
 
 
 ```{r}
@@ -358,7 +360,6 @@ tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>%
 The `remove` argument removes the original column(s) used for uniting or separating. 
 
 ---
-class: inverse
 
 ### 12.4.3- Q3
 
@@ -370,4 +371,206 @@ Compare and contrast `separate()` and `extract()`. Why are there three variation
 
 - In other words, with `extract()` and `separate()` only one column can be chosen, but there are many choices how to split that single column into different columns. With `unite()`, there are many choices as to which columns to include, but only one choice as to how to combine their contents into a single vector.
 
+---
+class: inverse
+
+
+## Missing values
+
+- Explicitly, i.e. flagged with NA.
+- Implicitly, i.e. simply not present in the data.
+- One way to think about the difference is: An explicit missing value is the presence of an absence; an implicit missing value is the absence of a presence.
+
+
+```{r}
+stocks <- tibble(
+  year   = c(2015, 2015, 2015, 2015, 2016, 2016, 2016),
+  qtr    = c(   1,    2,    3,    4,    2,    3,    4),
+  return = c(1.88, 0.59, 0.35,   NA, 0.92, 0.17, 2.66)
+)
+```
+
+---
+
+Pivoting this wider reveals the implicit missing value (controlled by the `values_drop_na` arguments).
+
+```{r}
+stocks %>% pivot_wider(names_from = year, values_from = return)
+```
+
+---
+
+## Complete
+
+Complete takes in column(s) and completes the df for all the potential combinations of the values in them.
+
+```{r}
+stocks %>% complete(year, qtr)
+```
+
+---
+
+## Fill
+
+Fill can be used to fill in the gaps with the preceding or following value - a common practice in data entry.
+
+```{r}
+treatment <- tribble(
+  ~ person,           ~ treatment, ~response,
+  "Derrick Whitmore", 1,           7,
+  NA,                 2,           10,
+  NA,                 3,           9,
+  "Katherine Burke",  1,           4
+)
+
+treatment %>% fill(person)
+```
+
+---
+class: inverse
+
+### 12.5.1- Q1
+
+Compare and contrast the fill arguments to pivot_wider() and complete().
+
+The `values_fill` argument in `pivot_wider()` and the `fill` argument to `complete()` both set vales to replace `NA`. Both arguments accept named lists to set values for each column. Additionally, the `values_fill` argument of `pivot_wider()` accepts a single value. In `complete()`, the `fill` argument also sets a value to replace NAs but it is named list, allowing for different values for different variables. Also, both cases replace both implicit and explicit missing values.
+
+---
+
+Example - Missing value filled with 0 using `values_fill`.
+
+```{r}
+stocks <- tibble(
+  year   = c(2015, 2015, 2015, 2015, 2016, 2016, 2016),
+  qtr    = c(   1,    2,    3,    4,    2,    3,    4),
+  return = c(1.88, 0.59, 0.35,   NA, 0.92, 0.17, 2.66)
+)
+stocks %>% 
+  pivot_wider(names_from = year, values_from = return,
+              values_fill = 0)
+```
+
+---
+
+Example - Missing value filled using `fill`. 
+
+```{r}
+stocks %>% 
+ complete(year, qtr, fill = list(return = 0))
+```
+
+---
+class: inverse
+
+### 12.5.2- Q2
+
+What does the direction argument to fill() do?
+
+The direction argument helps in detemining the direction of filling missing values. The options are - `down` (default) which replaces by previous non-NA value, `up` which replaces with the folllowing non-NA value, etc (`downup`, `updown`).
+
+---
+
+## Case Study 
+
+> The tidyr::who dataset contains tuberculosis (TB) cases broken down by year, country, age, gender, and diagnosis method. The data comes from the 2014 World Health Organization Global Tuberculosis Report, available at http://www.who.int/tb/country/data/download/en/.
+
+```{r}
+who
+```
+
+
+---
+
+Change the data to tidy data
+
+```{r}
+who_data <- who %>%
+  pivot_longer(
+    cols = new_sp_m014:newrel_f65, 
+    names_to = "key", 
+    values_to = "cases", 
+    values_drop_na = TRUE
+  ) %>% 
+  mutate(
+    key = stringr::str_replace(key, "newrel", "new_rel")
+  ) %>%
+  separate(key, c("new", "var", "sexage")) %>% 
+  select(-new, -iso2, -iso3) %>% 
+  separate(sexage, c("sex", "age"), sep = 1)
+```
+
+---
+class: inverse
+
+### 12.6.1- Q1
+
+In this case study I set values_drop_na = TRUE just to make it easier to check that we had the correct values. Is this reasonable? Think about how missing values are represented in this dataset. Are there implicit missing values? What’s the difference between an NA and zero?
+
+- If there are no 0 values in the data, then missing values may be used to indicate no cases.
+
+- If there are both explicit and implicit missing values, then it suggests that missing values are being used differently. In that case, it is likely that explicit missing values would mean no cases, and implicit missing values would mean no data on the number of cases.
+
+---
+
+### 12.6.1- Q2
+
+What happens if you neglect the mutate() step? (mutate(names_from = stringr::str_replace(key, "newrel", "new_rel")))
+
+```{r}
+who %>%
+  pivot_longer(
+    cols = new_sp_m014:newrel_f65, 
+    names_to = "key", 
+    values_to = "cases", 
+    values_drop_na = TRUE
+  ) %>% 
+  separate(key, c("new", "var", "sexage")) %>% 
+  separate(sexage, c("sex", "age"), sep = 1) %>%
+  filter(new == "newrel") %>% head()
+```
+
+The `separate()` function emits the warning "too few values". If we check the rows for keys beginning with `"newrel_"`, we see that `sexage` is missing, and `type = m014`.
+
+---
+
+### 12.6.1- Q3
+
+I claimed that iso2 and iso3 were redundant with country. Confirm this claim.
+
+- Check using distinct variables in country and iso2 and iso3
+
+```{r}
+nrow(distinct(who, country, iso2, iso3))
+nrow(distinct(who, country))
+```
+
+---
+
+### 12.6.1- Q4
+
+For each country, year, and sex compute the total number of cases of TB. Make an informative visualisation of the data.
+
+```{r warning = FALSE, message = FALSE, fig.height = 4 }
+who_data %>%
+  group_by(country, year, sex) %>%
+  filter(year > 1995) %>%
+  summarise(cases = sum(cases)) %>%
+  unite(country_sex, country, sex, remove = FALSE) %>%
+  ggplot(aes(x = year, y = cases, group = country_sex, colour = sex)) +
+  geom_line()
+```
+
+---
+
+## Non-tidy data
+
+> There are two main reasons to use other data structures:
+
+> * Alternative representations may have substantial performance or space advantages.
+
+> * Specialised fields have evolved their own conventions for storing data that may be quite different to the conventions of tidy data.
+
+> Either of these reasons means you’ll need something other than a tibble (or data frame). If your data does fit naturally into a rectangular structure composed of observations and variables, I think tidy data should be your default choice. But there are good reasons to use other structures; tidy data is not the only way.
+
+> If you’d like to learn more about non-tidy data, I’d highly recommend this thoughtful blog post by Jeff Leek: http://simplystatistics.org/2016/02/17/non-tidy-data/
 
